@@ -11,11 +11,12 @@
 # ]
 
 from django.urls import path
-from .views import get_audio_url, get_playlist_songs, get_user_playlists, home, suggestions, spotify_login, spotify_callback, spotify_logout, search_songs
+from .views import get_audio_url, get_playlist_songs, get_suggestions, get_user_playlists, home, suggestions, spotify_login, spotify_callback, spotify_logout, search_songs
 
 urlpatterns = [
     path('', home, name='home'),  # Home page with UI
     path('suggestions/', suggestions, name='suggestions'),
+    path("suggestions/", get_suggestions, name="get_suggestions"),
     path("spotify/login/", spotify_login, name="spotify_login"),
     path("spotify/callback/", spotify_callback, name="spotify_callback"),
     path("spotify/logout/", spotify_logout, name="spotify_logout"),

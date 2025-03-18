@@ -389,3 +389,20 @@ def get_audio_url(youtube_url):
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(youtube_url, download=False)
         return info["url"] if "url" in info else None
+    
+def get_suggestions(request):
+    query = request.GET.get("q", "")
+    if not query:
+        return JsonResponse({"error": "No query provided"}, status=400)
+
+    # Example response (replace with actual logic)
+    data = {
+        "search_result": {
+            "name": "Example Song",
+            "artist": "Example Artist",
+            "image_url": "https://example.com/image.jpg",
+            "audio_url": "https://example.com/audio.mp3",
+        },
+        "suggestions": [],
+    }
+    return JsonResponse(data)
