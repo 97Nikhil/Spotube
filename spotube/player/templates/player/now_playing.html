@@ -1,0 +1,34 @@
+{% extends 'player/base.html' %} {% load static %}
+<!-- load base file -->
+{% block content %}
+<div class="current-track">
+  <div class="current-track-navbar">Current Track</div>
+  <div class="current-track-content">
+    <div class="song-image">
+      <img src="{% static 'download.jpeg' %}" alt="Song Image" />
+    </div>
+    <div class="song-details">
+      <div class="song-name-mute">
+        <div class="song-name">Song Name</div>
+        <button class="mute-button" aria-label="Mute">
+          <i class="fas fa-volume-up"></i>
+        </button>
+      </div>
+      <div class="music-controls">
+        <button class="control-button" aria-label="Previous">
+          <i class="fas fa-backward"></i>
+        </button>
+        <button class="control-button" aria-label="Play">
+          <i class="fas fa-play"></i>
+        </button>
+        <button class="control-button" aria-label="Next">
+          <i class="fas fa-forward"></i>
+        </button>
+      </div>
+      <div class="progress-bar">
+        <div class="progress"></div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
