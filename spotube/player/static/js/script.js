@@ -51,6 +51,19 @@ document.addEventListener("DOMContentLoaded", function () {
                 </div>`;
             suggestionsContainer.innerHTML += songBox;
           });
+          if (data.suggestions && data.suggestions.length > 0) {
+            data.suggestions.forEach((song) => {
+              let songBox = `
+                  <div class="song-box" data-audio-url="${song.audio_url}">
+                      <div class="song-image">
+                          <img src="${song.image_url}" alt="${song.name}" />
+                      </div>
+                      <div class="song-name">${song.name}</div>
+                      <div class="song-artist">${song.artist}</div>
+                  </div>`;
+              suggestionsContainer.innerHTML += songBox;
+            });
+          }
         }
 
         if (
@@ -90,22 +103,19 @@ document.addEventListener("DOMContentLoaded", function () {
                     <span>${playlist.name}</span>
                 `;
           playlistItem.addEventListener("click", function (event) {
-            event.preventDefault(); // ⛔ Prevent default link action
-            event.stopPropagation(); // ⛔ Stop event bubbling
+            event.preventDefault();
+            event.stopPropagation();
 
             console.log(
               `📂 Clicked Playlist: ${playlist.name} (ID: ${playlist.id})`
             );
 
-            // ✅ Ensure no redirection happens
             if (window.location.pathname !== "/") {
               window.history.pushState(null, "", "/"); // Adjust URL without reloading
             }
 
-            // ✅ Load playlist songs without redirecting
             loadPlaylistSongs(playlist.id);
-
-            return false; // ⛔ Explicitly prevent navigation
+            return false;
           });
 
           playlistContent.appendChild(playlistItem);
@@ -132,7 +142,7 @@ document.addEventListener("DOMContentLoaded", function () {
         currentSongIndex = 0; // Reset index
 
         data.songs.forEach((song, index) => {
-          if (!song.audio_url) return; // Skip if no audio
+          if (!song.audio_url) return;
 
           let songBox = `
                     <div class="song-box" data-audio-url="${song.audio_url}" data-index="${index}">
@@ -145,7 +155,6 @@ document.addEventListener("DOMContentLoaded", function () {
           suggestionsContainer.innerHTML += songBox;
         });
 
-        // ✅ Add event listeners to play a song when clicked
         document.querySelectorAll(".song-box").forEach((box) => {
           box.addEventListener("click", function () {
             currentSongIndex = parseInt(box.dataset.index);
@@ -158,24 +167,9 @@ document.addEventListener("DOMContentLoaded", function () {
       .catch((error) => console.error("❌ Error fetching songs:", error));
   }
 
-  function playYouTubeAudio(youtubeUrl) {
-    fetch(`/player/get_audio_url/?url=${encodeURIComponent(youtubeUrl)}`)
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.audio_url) {
-          audioPlayer.src = data.audio_url; // Set the audio player source
-          audioPlayer.play();
-        } else {
-          console.error("❌ Error fetching audio URL:", data.error);
-        }
-      })
-      .catch((error) => console.error("❌ Error:", error));
-  }
-
   function playSong(song) {
     console.log("🎵 Now Playing:", song);
 
-    let audioPlayer = document.getElementById("audio-player");
     let currentTrackName = document.getElementById("current-track-name");
     let currentTrackImage = document.getElementById("current-track-image");
 
@@ -189,33 +183,39 @@ document.addEventListener("DOMContentLoaded", function () {
 
     currentTrackName.textContent = song.name;
     currentTrackImage.src = song.image_url;
+
+    // Update play/pause button
+    playPauseBtn.innerHTML = `<i class="fas fa-pause"></i>`;
   }
 
-  // **✅ Play/Pause Button**
   playPauseBtn.addEventListener("click", function () {
     if (audioPlayer.paused) {
       audioPlayer.play();
-      playPauseBtn.innerHTML = `<i class="fas fa-pause"></i>`;
+      playPauseBtn.innerHTML = `<i class="fas fa-pause"></i>`; // Change icon to pause
     } else {
       audioPlayer.pause();
-      playPauseBtn.innerHTML = `<i class="fas fa-play"></i>`;
+      playPauseBtn.innerHTML = `<i class="fas fa-play"></i>`; // Change icon back to play
     }
   });
 
   // **✅ Next Song**
   nextBtn.addEventListener("click", function () {
     if (currentSongIndex < playlistQueue.length - 1) {
-      playSong(currentSongIndex + 1); // Go to the next song
+      currentSongIndex++;
     } else {
-      playSong(0); // Loop back to the first song
+      currentSongIndex = 0; // Loop back to first song
     }
+    playSong(playlistQueue[currentSongIndex]);
   });
 
   // **✅ Previous Song**
   prevBtn.addEventListener("click", function () {
     if (currentSongIndex > 0) {
-      playSong(currentSongIndex - 1);
+      currentSongIndex--;
+    } else {
+      currentSongIndex = playlistQueue.length - 1; // Go to last song
     }
+    playSong(playlistQueue[currentSongIndex]);
   });
 
   // **✅ Update Progress Bar**
@@ -227,13 +227,14 @@ document.addEventListener("DOMContentLoaded", function () {
   // **✅ Autoplay Next Song**
   audioPlayer.addEventListener("ended", function () {
     if (currentSongIndex < playlistQueue.length - 1) {
-      playSong(currentSongIndex + 1); // Play next song
+      currentSongIndex++;
     } else {
-      playSong(0); // Restart from the first song when the playlist ends
+      currentSongIndex = 0; // Restart from the first song when the playlist ends
     }
+    playSong(playlistQueue[currentSongIndex]);
   });
 
-  // **✅ Remove duplicate <audio> elements inside "current-track"**
+  // **✅ Remove duplicate <audio> elements**
   document.querySelectorAll(".current-track audio").forEach((el, i) => {
     if (i > 0) el.remove();
   });
