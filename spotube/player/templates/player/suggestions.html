@@ -1,0 +1,43 @@
+{% extends 'player/base.html' %} {% load static %}
+<!-- load base file -->
+{% block content %}
+<div class="main">
+  <div class="main-navbar">Suggestions</div>
+
+  <!-- Display Search Result at the Top (if available) -->
+  {% if search_result and search_result.name %}
+  <div class="search-result">
+    <h3>Search Result</h3>
+    <div class="song-box">
+      <div class="song-image">
+        <img
+          src="{{ search_result.image_url }}"
+          alt="{{ search_result.name }}"
+        />
+      </div>
+      <div class="song-name">{{ search_result.name }}</div>
+      {% comment %} <div class="song-artist">{{ search_result.artist }}</div> {% endcomment %}
+    </div>
+  </div>
+  {% else %}
+  <p class="error-msg">No search results found. Try another song!</p>
+  {% endif %}
+
+  <!-- Show Suggested Songs -->
+  <div class="main-content">
+    {% if suggestions %}
+    <h3>Suggested Songs</h3>
+    {% for song in suggestions %}
+    <div class="song-box">
+      <div class="song-image">
+        <img src="{{ song.image_url }}" alt="{{ song.name }}" />
+      </div>
+      <div class="song-name">{{ song.name }}</div>
+      <div class="song-artist">{{ song.artist }}</div>
+    </div>
+    {% endfor %} {% else %}
+    <p>No suggestions available. Try searching for a song!</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

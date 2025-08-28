@@ -1,0 +1,66 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Spotube</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+  </head>
+
+  <body>
+    <!-- Navbar -->
+    <div class="navbar">
+      <div class="navbar-left">Spotube</div>
+      <!-- Middle: Search Bar with Icon -->
+      <div class="navbar-middle">
+        <form action="{% url 'suggestions' %}" method="GET">
+          <div class="search-container">
+            <input
+              type="text"
+              name="q"
+              placeholder="Search..."
+              class="search-bar"
+              aria-label="Search"
+            />
+            <button type="submit" class="search-button">
+              <i class="fas fa-search search-icon"></i>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div class="navbar-right">
+        {% if request.session.spotify_access_token %}
+        <a
+          href="{% url 'spotify_logout' %}"
+          class="logout-button log-btn"
+          aria-label="Logout"
+          >Logout</a
+        >
+        {% else %}
+        <a
+          href="{% url 'spotify_login' %}"
+          class="login-button log-btn"
+          aria-label="Login"
+          >Login</a
+        >
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Main Content Block -->
+    <div class="container">{% block content %}{% endblock %}</div>
+
+    <!-- Footer -->
+    <div class="footer">Created by Nikhil</div>
+
+    <script src="{% static 'js/script.js' %}"></script>
+  </body>
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+
+</html>

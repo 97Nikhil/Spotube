@@ -1,0 +1,56 @@
+{% extends 'player/base.html' %} {% load static %}
+<!-- base file -->
+{% block content %}
+<!-- Playlist Section -->
+<div class="playlist">
+  <div class="playlist-navbar">My Library</div>
+  <div class="playlist-content"></div>
+  <!-- ✅ Now dynamically filled with playlists -->
+</div>
+
+<!-- Main Section -->
+<div class="main">
+  <div class="main-navbar">Suggestions</div>
+  <div class="main-content"></div>
+  <!-- ✅ Now dynamically filled with songs -->
+</div>
+
+<!-- Current Track Section -->
+<div class="current-track">
+  <div class="current-track-navbar">Current Track</div>
+  <div class="current-track-content">
+    <div class="song-image">
+      <img
+        id="current-track-image"
+        src="{% static 'download.jpeg' %}"
+        alt="Song Image"
+      />
+    </div>
+    <div class="song-details">
+      <div class="song-name-mute">
+        <div id="current-track-name" class="song-name">Song Name</div>
+        <button class="mute-button" aria-label="Mute">
+          <i class="fas fa-volume-up"></i>
+        </button>
+      </div>
+      <div class="music-controls">
+        <button class="control-button" aria-label="Previous">
+          <i class="fas fa-backward"></i>
+        </button>
+        <button class="control-button" aria-label="Play">
+          <i class="fas fa-play"></i>
+        </button>
+        <button class="control-button" aria-label="Next">
+          <i class="fas fa-forward"></i>
+        </button>
+      </div>
+      <!-- ✅ Added Audio Player -->
+      <audio id="audio-player" controls></audio>
+      <div class="progress-bar">
+        <div class="progress"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
